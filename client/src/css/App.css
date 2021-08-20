@@ -1,0 +1,30 @@
+.App {
+  margin: auto;
+  margin-top: 50px;
+  align-items: center;
+  width: 500px;
+}
+
+.pagination {
+  margin: 20px auto;
+}
+
+.card {
+  margin-top: 10px;
+  padding: 30px;
+}
+
+.form {
+  margin-top: 100px;
+}
+
+.logout a {
+  text-decoration: none;
+}
+
+.navigation {
+  top: 0;
+  position: fixed;
+  z-index: 2;
+  width: 100%;
+}

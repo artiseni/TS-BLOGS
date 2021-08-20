@@ -1,0 +1,61 @@
+
+POST http://localhost:5000/home/post/add
+Content-Type: application/json
+
+{
+    "uuid": "2985ae20-ef22-497a-b1b1-631f25bb1915",
+    "title": "Coldplay",
+    "content": "A sky full of stars"
+}
+
+###
+
+POST http://localhost:5000/myblogs/update
+Content-Type: application/json
+
+{
+    "uuid": "009116ed-868d-45ef-949a-33a16cb2d261",
+    "title": "Cara naik gojek",
+    "content": "Install app gojek dong"
+}
+
+
+###
+
+POST http://localhost:5000/signup
+Content-Type: application/json
+
+{
+    "username": "kamu",
+    "email": "kamu@gmail.com",
+    "password": "123qwe"
+}
+
+###
+
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "saya@gmail.com",
+    "password": "123qwe"
+}
+
+###
+
+POST http://localhost:5000/token
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExLCJpYXQiOjE2Mjg2MDk1MzYsImV4cCI6MTYyOTIxNDMzNn0.qXqsYLJpZQUr4x3z9vKa9R_GpriqrjlpZl6RPXeHPe8"
+}
+
+###
+
+GET http://localhost:5000/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExLCJpYXQiOjE2Mjg2MTcyODIsImV4cCI6MTYyODYxNzM0Mn0.ge5M_-UJHopYmHV6HamhNuZuPR1molYCkqkFkzalios
+
+
+###
+
+GET http://localhost:5000/home/mypost?uuid=5d4cf8ca-a7ca-4e00-8295-d239d8e7fcac

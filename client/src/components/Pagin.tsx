@@ -1,7 +1,11 @@
 import { Component } from "react"
 import { Pagination } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { firstPage, nextPage, previousPage, targetPage, setLoading, setIndexPost } from '../store/hooks'
+import {
+    firstPage, nextPage, previousPage,
+    targetPage, setLoading, setIndexPost,
+    setMyPost
+} from '../store/hooks'
 import Api from '../api/Api'
 
 
@@ -16,12 +20,18 @@ interface Props {
         current: number
     }
 
+    data: {
+        user: { uuid: string }
+    }
+
+    type: string
     firstPage: any
     nextPage: any
     previousPage: any
     targetPage: any
     setLoading: any
     setIndexPost: any
+    setMyPost: any
 
 }
 
@@ -29,10 +39,42 @@ interface Props {
 class Paginate extends Component<Props> {
 
 
+    constructor(props: any) {
+        super(props)
+
+        console.log(props.type)
+    }
+
+
+    index = async (): Promise<void> => {
+        const api = new Api(this.props.page.blogs)
+        const data: any = await api.index()
+        if (data) {
+            this.props.setLoading()
+            this.props.setIndexPost(data)
+        }
+    }
+
+
+    userBlogs = async (): Promise<void> => {
+
+        const { uuid } = this.props.data.user
+        const { currentPage, take } = this.props.page.blogs
+
+        const api = new Api({ uuid, currentPage, take })
+        const data: any = await api.myBlogs()
+
+        if (data) {
+            this.props.setLoading()
+            this.props.setMyPost(data)
+        }
+    }
+
+
     btnNumber = () => {
 
         const pageNumber = []
-        for (let i = 1; i <= Math.ceil(this.props.page.countBlogs / this.props.page.blogs.take); i++) {
+        for (let i = 1; i <= this.props.page.ceil; i++) {
             pageNumber.push(<Pagination.Item key={i} active={i === this.props.page.blogs.currentPage} onClick={async () => await this.targetButton(i)} >{i}</Pagination.Item>)
         }
         return pageNumber
@@ -46,10 +88,7 @@ class Paginate extends Component<Props> {
             })
             const result = await promise
             if (result) {
-                const api = new Api(this.props.page.blogs)
-                const data = await api.index()
-                this.props.setLoading()
-                this.props.setIndexPost(data)
+                this.props.type === 'index' ? this.index() : this.userBlogs()
             }
 
         } catch (error) {
@@ -66,10 +105,7 @@ class Paginate extends Component<Props> {
             })
             const result = await promise
             if (result) {
-                const api = new Api(this.props.page.blogs)
-                const data = await api.index()
-                this.props.setLoading()
-                this.props.setIndexPost(data)
+                this.props.type === 'index' ? this.index() : this.userBlogs()
             }
 
         } catch (error) {
@@ -88,10 +124,7 @@ class Paginate extends Component<Props> {
             })
             const result = await promise
             if (result) {
-                const api = new Api(this.props.page.blogs)
-                const data = await api.index()
-                this.props.setLoading()
-                this.props.setIndexPost(data)
+                this.props.type === 'index' ? this.index() : this.userBlogs()
             }
 
         } catch (error) {
@@ -108,10 +141,7 @@ class Paginate extends Component<Props> {
             })
             const result = await promise
             if (result) {
-                const api = new Api(this.props.page.blogs)
-                const data = await api.index()
-                this.props.setLoading()
-                this.props.setIndexPost(data)
+                this.props.type === 'index' ? this.index() : this.userBlogs()
             }
 
         } catch (error) {
@@ -128,10 +158,7 @@ class Paginate extends Component<Props> {
             })
             const result = await promise
             if (result) {
-                const api = new Api(this.props.page.blogs)
-                const data = await api.index()
-                this.props.setLoading()
-                this.props.setIndexPost(data)
+                this.props.type === 'index' ? this.index() : this.userBlogs()
             }
 
         } catch (error) {
@@ -160,7 +187,8 @@ class Paginate extends Component<Props> {
 }
 
 const mapStateToProps = (state: any) => ({
-    page: state.page
+    page: state.page,
+    data: state.data
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -168,6 +196,7 @@ const mapDispatchToProps = (dispatch: any) => ({
     nextPage: () => dispatch(nextPage()),
     setLoading: () => dispatch(setLoading()),
     setIndexPost: (data: any) => dispatch(setIndexPost(data)),
+    setMyPost: (data: any) => dispatch(setMyPost(data)),
     previousPage: () => dispatch(previousPage()),
     targetPage: (num: number) => dispatch(targetPage(num))
 })

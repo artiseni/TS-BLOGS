@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import { Infouser } from '../entities/Infouser'
 import { Infopost } from '../entities/Infopost'
+import { Infocomments } from '../entities/Infocomments'
 import { isAuth } from '../auth/isAuth'
 const router = express.Router()
 
@@ -31,6 +32,14 @@ router
     .get(isAuth, (req: any, res: Response) => {
         const user = new Infouser(req, res)
         user.isUser()
+    })
+
+
+router
+    .route('/user/comment')
+    .post(async (req: Request, res: Response) => {
+        const user = new Infocomments(req, res)
+        user.addComment()
     })
 
 router

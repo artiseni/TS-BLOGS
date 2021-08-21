@@ -48,8 +48,8 @@ export default class Api {
     }
 
     myBlogs = async (): Promise<void> => {
-        const { uuid, skip, take } = this.req
-        const res: any = await this.api.get('/myblogs', { params: { uuid, skip, take } })
+        const { uuid, currentPage, take } = this.req
+        const res: any = await this.api.get('/myblogs', { params: { uuid, currentPage, take } })
         if (res) {
             const { data } = res
             return data
@@ -86,6 +86,16 @@ export default class Api {
         if (res) {
             const { data } = res
             return data
+        }
+    }
+
+    addComment = async (): Promise<void> => {
+        const res: any = await this.api.post('/user/comment', this.req)
+        if (res) {
+            const { data } = res
+            return data
+        } else {
+            return res
         }
     }
 }

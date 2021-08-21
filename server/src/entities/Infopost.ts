@@ -1,5 +1,6 @@
-import { Entity, Column, ManyToOne } from 'typeorm'
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm'
 import { Infouser } from './Infouser'
+import { Infocomments } from './Infocomments'
 import { Request, Response } from 'express'
 import Model from './Model'
 
@@ -29,6 +30,10 @@ export class Infopost extends Model {
     infouser!: Infouser
 
 
+    @OneToMany(() => Infocomments, infocomments => infocomments.infopost)
+    infocomments!: Infocomments
+
+
     index = async () => {
         const { currentPage, take } = this.req.query
         try {
@@ -36,7 +41,7 @@ export class Infopost extends Model {
                 order: { updatedAt: 'DESC' },
                 skip: (currentPage * take) - take,
                 take,
-                relations: ['infouser']
+                relations: ['infouser', 'infocomments']
             })
             if (data) {
                 this.res.status(200).json(data)
@@ -48,6 +53,7 @@ export class Infopost extends Model {
 
     myPost = async () => {
         try {
+            console.log(this.req.query)
             const { uuid, currentPage, take } = this.req.query
             const data = await Infouser.findOne({ uuid })
 

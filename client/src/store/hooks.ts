@@ -11,11 +11,13 @@ export const dataUser = createSlice({
         content: [],
         button_number: 0 as number,
         str: '' as string,
-        loading: false,
         countBlogs: 0 as number,
         ceil: 0,
         current: 1,
+        loading: false,
         login: false,
+        edit: false,
+        displayComments: false,
 
         blogs: {
             currentPage: 1 as number,
@@ -23,10 +25,11 @@ export const dataUser = createSlice({
         } as any,
 
         edit_post: {
-            infouser: { username: '' },
-            updatedAt: '',
-            title: '',
-            content: ''
+            uuid: '' as string,
+            username: '' as string,
+            updatedAt: '' as string,
+            title: '' as string,
+            content: '' as string
         } as object,
 
         index_post: [[], 0] as any[],
@@ -34,6 +37,14 @@ export const dataUser = createSlice({
     },
 
     reducers: {
+
+        setDisplayComments: state => {
+            state.displayComments = !state.displayComments
+        },
+
+        setEdit: state => {
+            state.edit = !state.edit
+        },
 
         setLogin: state => {
             state.login = true
@@ -134,6 +145,7 @@ export const dataUser = createSlice({
         },
 
         reset: state => {
+            state.edit = false
             state.login = false
             state.button_number = 0
             state.user = {}
@@ -150,7 +162,8 @@ export const {
     firstPage, targetPage, setContent,
     nextButtonNumber, changeButtonNumber,
     setString, setLoading, setCountBlogs,
-    setCeil, setBlogs, setLogin
+    setCeil, setBlogs, setLogin, setEdit,
+    setDisplayComments
 } = dataUser.actions
 
 export default dataUser.reducer

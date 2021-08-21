@@ -24,7 +24,10 @@ abstract class Model extends BaseEntity {
     }
 
     toJSON() {
-        return { ...this, password: undefined, id: undefined, infouserId: undefined }
+        return {
+            ...this, password: undefined, id: undefined,
+            infouserId: undefined, infopostId: undefined
+        }
     }
 }
 

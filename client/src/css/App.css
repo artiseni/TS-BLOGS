@@ -28,3 +28,12 @@
   z-index: 2;
   width: 100%;
 }
+
+.displayComments:hover {
+  color: rgb(52, 52, 221);
+  cursor: pointer;
+}
+
+.cardComments {
+  display: none;
+}

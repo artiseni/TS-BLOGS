@@ -1,4 +1,16 @@
 
+POST https://localhost:5000/user/comment
+Content-Type: application/json
+
+{
+    "user_uuid": "5d4cf8ca-a7ca-4e00-8295-d239d8e7fcac", 
+    "post_uuid": "f12e3921-6b20-4507-9ab6-6efcdfdeff8e", 
+    "comment": "Kuda"
+}
+
+
+###
+
 POST http://localhost:5000/home/post/add
 Content-Type: application/json
 

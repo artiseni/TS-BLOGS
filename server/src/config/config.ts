@@ -2,6 +2,7 @@ import { Connection, createConnection } from 'typeorm'
 import * as dotnv from 'dotenv'
 import { Infouser } from '../entities/Infouser'
 import { Infopost } from '../entities/Infopost'
+import { Infocomments } from '../entities/Infocomments'
 dotnv.config({ path: '../../.env' })
 
 export const db = (): Promise<Connection> => {
@@ -12,7 +13,7 @@ export const db = (): Promise<Connection> => {
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         logging: true,
-        entities: [Infouser, Infopost],
+        entities: [Infouser, Infopost, Infocomments],
         synchronize: true
     })
 }

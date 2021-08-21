@@ -5,6 +5,7 @@ import { Container, Row, Col, Card, Alert } from 'react-bootstrap'
 import HiddenButton from '../components/HiddenButton'
 import Api from '../api/Api'
 import Paginate from '../components/Pagin'
+import Comment from '../components/Comment'
 import { setLoading, setCountBlogs, setIndexPost, setCeil } from '../store/hooks'
 
 
@@ -16,7 +17,11 @@ interface Props {
         }
         loading: boolean
         countBlogs: number
-        index_post: any
+        index_post: {
+            0: any
+            1: number
+        }
+
     }
 
     setLoading: any
@@ -93,6 +98,7 @@ class Index extends Component<Props>{
         const { loading } = this.props.page
         const hidden = new HiddenButton({})
 
+
         return (
             <>
                 <Navigation />
@@ -118,6 +124,8 @@ class Index extends Component<Props>{
                                                     <Card.Text className="content">
                                                         {hidden.textBody(result.content)}
                                                     </Card.Text>
+                                                    <br />
+                                                    <Comment result={result} infocomments={result.infocomments} />
                                                 </Card.Body>
                                                 <HiddenButton text={result.content} />
                                             </Card>
@@ -128,7 +136,7 @@ class Index extends Component<Props>{
                             </Col>
                         </Row>
                     </Container>
-                    <Paginate />
+                    <Paginate type="index" />
                 </div>
             </>
         )

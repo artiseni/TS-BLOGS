@@ -6,6 +6,7 @@ import HiddenButton from '../components/HiddenButton'
 import Api from '../api/Api'
 import Paginate from '../components/Pagin'
 import Comment from '../components/Comment'
+import { withRouter } from 'react-router-dom'
 import { setLoading, setCountBlogs, setIndexPost, setCeil } from '../store/hooks'
 
 
@@ -28,21 +29,32 @@ interface Props {
     setCountBlogs: any
     setIndexPost: any
     setCeil: any
+    history: any
 
 }
 
 
-class Index extends Component<Props>{
+interface State {
+    hiddenData: any
+}
+
+
+class Index extends Component<Props | any, State>{
 
 
     setLoading: any
     setCountBlogs: any
     setIndexPost: any
     setCeil: any
+    count: number = 0
 
     constructor(props: any) {
 
         super(props)
+
+        this.state = {
+            hiddenData: []
+        }
 
         const { setLoading, setCountBlogs, setIndexPost, setCeil }: any = this.props
 
@@ -56,7 +68,7 @@ class Index extends Component<Props>{
     }
 
     componentDidMount = () => {
-        console.log(`Mounted`)
+        console.log(this.state.hiddenData)
         this.updatePage()
     }
 
@@ -93,6 +105,12 @@ class Index extends Component<Props>{
     }
 
 
+    hiddenComments = (data: any) => {
+        this.count++
+        // console.log(this.count)
+        // console.log(data)
+    }
+
     render = (): JSX.Element => {
 
         const { loading } = this.props.page
@@ -125,7 +143,14 @@ class Index extends Component<Props>{
                                                         {hidden.textBody(result.content)}
                                                     </Card.Text>
                                                     <br />
-                                                    <Comment result={result} infocomments={result.infocomments} />
+                                                    <Comment
+                                                        history={this.props.history}
+                                                        result={result}
+                                                        infocomments={result.infocomments}
+                                                    />
+                                                    {
+                                                        this.hiddenComments(result.infocomments)
+                                                    }
                                                 </Card.Body>
                                                 <HiddenButton text={result.content} />
                                             </Card>
@@ -156,4 +181,4 @@ const mapDispatchToProps = (dispatch: any) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Index)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Index))

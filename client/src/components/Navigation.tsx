@@ -49,6 +49,7 @@ class Navigation extends Component<Props | any> {
 
     myBlogs = () => {
         this.props.history.push(`/${this.username}/myblogs`)
+        window.location.reload()
     }
 
     home = () => {

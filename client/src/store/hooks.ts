@@ -18,6 +18,8 @@ export const dataUser = createSlice({
         login: false,
         edit: false,
         displayComments: false,
+        hiddenComments: [] as any,
+        isHide: 'none' as string,
 
         blogs: {
             currentPage: 1 as number,
@@ -37,6 +39,16 @@ export const dataUser = createSlice({
     },
 
     reducers: {
+
+        setIsHide: (state, action) => {
+            const { payload } = action
+            state.isHide = payload
+        },
+
+        setHiddenComments: (state, action) => {
+            const { payload } = action
+            state.hiddenComments = payload
+        },
 
         setDisplayComments: state => {
             state.displayComments = !state.displayComments
@@ -163,7 +175,8 @@ export const {
     nextButtonNumber, changeButtonNumber,
     setString, setLoading, setCountBlogs,
     setCeil, setBlogs, setLogin, setEdit,
-    setDisplayComments
+    setDisplayComments, setHiddenComments,
+    setIsHide
 } = dataUser.actions
 
 export default dataUser.reducer

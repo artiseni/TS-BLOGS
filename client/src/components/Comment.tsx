@@ -1,12 +1,15 @@
+
 import { Component } from "react"
 import { Button, Form, Card } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import Api from '../api/Api'
+import { setHiddenComments, setIsHide, setIndexPost } from '../store/hooks'
 
 
 interface Props {
     data: {
         login: boolean
+        blogs: any
         user: {
             uuid: string
             username: string
@@ -14,34 +17,59 @@ interface Props {
         index_post: {
             0: any
         }
+        isHide: string
     }
+
+    page: { blogs: any }
+
     result: any
     infocomments: any
+    setHiddenComments: any
+    setIndexPost: any
+    setIsHide: any
+    history?: any
 }
 
 interface State {
     comments: string
+    isHide: string
+    dataHide: any
+    pushData: any
 }
 
 
 class Comment extends Component<Props | any, State> {
 
 
-    count: number = 0
-
     constructor(props: any) {
         super(props)
         this.state = {
-            comments: ''
+            comments: '',
+            isHide: this.props.data.isHide,
+            dataHide: [],
+            pushData: null
         }
     }
+
+
+    static getDerivedStateFromProps = (props: any, state: any) => {
+        state.dataHide = props.infocomments
+        return null
+    }
+
+
+    componentDidMount = () => {
+        // console.log(this.state.dataHide)
+    }
+
 
     commentValue = (e: any) => {
         const { value } = e.target
         this.setState({ comments: value })
     }
 
-    submit = async (): Promise<void> => {
+
+    submit = async (e: any): Promise<void> => {
 
         const { comments } = this.state
 
@@ -60,57 +88,62 @@ class Comment extends Component<Props | any, State> {
             }
 
             try {
+
                 const api = new Api(data)
                 const result: any = await api.addComment()
+
                 if (result) {
-                    window.location.reload()
-                    // this.props.history.push('/')
+
+                    const index_data = new Api(this.props.page.blogs)
+                    const res: any = await index_data.index()
+
+                    if (res) {
+                        new Promise(data => {
+                            data(this.props.setIndexPost(res))
+                        }).then(() => {
+                            const { parentNode } = e.target
+                            const textarea = parentNode.querySelector('textarea')
+                            textarea.value = ''
+                            this.setState({ isHide: 'block' })
+                        })
+                    }
                 }
+
             } catch (error) {
-                const { data } = error.response
-                alert(data.message)
+                console.log(`${error}`)
             }
 
         }
     }
 
     displayComments = (e: any) => {
-        this.count++
-        const { parentNode } = e.target
-        const { childNodes } = parentNode
-        if (this.count === 1 && childNodes[8].childNodes.length !== 0) {
-            childNodes[8].style.display = 'block'
-        } else if (this.count === 2 && childNodes[8].childNodes.length !== 0) {
-            childNodes[8].style.display = 'none'
-            return this.count = 0
-        }
+        return this.state.isHide === 'none' ?
+            this.setState({ isHide: 'block' }) :
+            this.setState({ isHide: 'none' })
     }
 
-    hiddenComments = () => {
-        return this.props.infocomments.length !== 0 ?
-            <Card className="cardComments" style={{ display: 'none' }}>
-                {
-                    this.props.infocomments.map((res: any) =>
-                        <div key={res.uuid}>
-                            <p>{res.username} :</p>
-                            <p>{res.comments}</p>
-                            <hr />
-                        </ div>
-                    )
-                }
-            </ Card> :
-            null
-    }
 
     render = () => {
 
-        // console.log(this.props.data.index_post[0])
-
         return (
             <>
-                <Card.Text className="displayComments" aria-disabled={this.props.result.infocomments.length === 0} onClick={this.displayComments}>{this.props.result.infocomments.length} comments</Card.Text>
+                <Card.Text className="displayComments" onClick={this.displayComments}>{this.props.infocomments.length} comments</Card.Text>
                 <hr />
-                {this.hiddenComments()}
+                {
+                    this.state.dataHide.length !== 0 ?
+                        <Card className="cardComments" style={{ display: this.state.isHide }}>
+                            {
+                                this.state.dataHide.map((res: any) =>
+                                    <div key={res.uuid}>
+                                        <p>{res.username} :</p>
+                                        <p>{res.comments}</p>
+                                        <hr />
+                                    </ div>
+                                )
+                            }
+                        </ Card> :
+                        null
+                }
                 <br />
                 <Form.Control as="textarea" placeholder="Add comments" name="comments" onChange={this.commentValue} rows={2} />
                 <br />
@@ -122,8 +155,15 @@ class Comment extends Component<Props | any, State> {
 
 
 const mapStateToProps = (state: any) => ({
-    data: state.data
+    data: state.data,
+    page: state.page
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+    setHiddenComments: (data: any) => dispatch(setHiddenComments(data)),
+    setIsHide: (data: string) => dispatch(setIsHide(data)),
+    setIndexPost: (data: any) => dispatch(setIndexPost(data))
 })
 
 
-export default connect(mapStateToProps)(Comment)
+export default connect(mapStateToProps, mapDispatchToProps)(Comment)

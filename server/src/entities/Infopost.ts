@@ -1,8 +1,9 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm'
+import { Entity, Column, ManyToOne, OneToMany, ILike } from 'typeorm'
 import { Infouser } from './Infouser'
 import { Infocomments } from './Infocomments'
 import { Request, Response } from 'express'
 import Model from './Model'
+
 
 
 @Entity()
@@ -33,6 +34,25 @@ export class Infopost extends Model {
     @OneToMany(() => Infocomments, infocomments => infocomments.infopost)
     infocomments!: Infocomments
 
+
+    search = async (): Promise<void> => {
+
+        const { title } = this.req.query
+
+        console.log(this.req.query)
+        try {
+            const data = await Infopost.findAndCount({
+                title: ILike(`%${title}%`),
+                // relations: ['infouser', 'infocomments']
+            })
+            if (data) {
+                this.res.status(200).json(data)
+            }
+        } catch (error) {
+            console.log(`${error}`)
+            this.res.status(401).json({ message: 'Title not found!' })
+        }
+    }
 
     index = async () => {
         const { currentPage, take } = this.req.query
@@ -85,7 +105,6 @@ export class Infopost extends Model {
 
             post.title = title
             post.content = content
-            const update: any = await Infopost.save(post)
             return this.res.status(200).json(post)
 
         } catch (err) {

@@ -15,6 +15,17 @@ export default class Api {
         })
     }
 
+    search = async (): Promise<void> => {
+        const { title } = this.req
+        const res: any = await this.api.get('/search', { params: { title } })
+        if (res) {
+            const { data } = res
+            return data
+        } else {
+            return res
+        }
+    }
+
     login = async (): Promise<void> => {
         const res: any = await this.api.post('/login', this.req)
         if (res) {

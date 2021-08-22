@@ -1,8 +1,9 @@
 import { Component, createRef } from 'react'
-import { Navbar, Nav, Container, Modal, Button } from 'react-bootstrap'
+import { Navbar, Nav, Container, Modal, Button, FormControl, Form } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { reset } from '../store/hooks'
+import Api from '../api/Api'
 
 
 interface Props {
@@ -23,6 +24,7 @@ interface Props {
 
 interface State {
     show: boolean
+    title: string
 }
 
 
@@ -38,7 +40,8 @@ class Navigation extends Component<Props | any, State> {
         super(props)
         this.wrapper = createRef()
         this.state = {
-            show: false
+            show: false,
+            title: ''
         }
 
         const { pathname } = this.props.location
@@ -71,6 +74,43 @@ class Navigation extends Component<Props | any, State> {
         this.props.history.push(`/${this.username}`)
     }
 
+    search = (e: any) => {
+        const { value } = e.target
+        this.setState({ title: value })
+    }
+
+    findData = async () => {
+        const { title } = this.state
+        try {
+            const api = new Api({ title })
+            const result: any = await api.search()
+            if (result) {
+                console.log(result)
+            }
+        } catch (error) {
+            console.log(`${error}`)
+        }
+    }
+
+
+    isIndex = (): JSX.Element => {
+        return (
+            <>
+                <Form className="d-flex">
+                    <FormControl
+                        onChange={this.search}
+                        name="title"
+                        type="search"
+                        placeholder="Search"
+                        className="mr-2"
+                        aria-label="Search"
+                    />
+                    <Button onClick={this.findData} className="btnSearch" variant="outline-light">Search</Button>
+                </Form>
+            </>
+        )
+    }
+
     isLogin = (): JSX.Element => {
 
         const { login } = this.props.data
@@ -84,6 +124,9 @@ class Navigation extends Component<Props | any, State> {
                             <Nav.Link href="/login" active={this.path === '/login'}>Login</Nav.Link>
                             <Nav.Link href="/signup" active={this.path === '/signup'} >SignUp</Nav.Link>
                         </Nav>
+                        {
+                            this.path === '/' ? this.isIndex() : null
+                        }
                     </Container>
                 </Navbar>
             </div> :
@@ -97,6 +140,9 @@ class Navigation extends Component<Props | any, State> {
                             <Nav.Link onClick={this.myBlogs} active={this.path === `/${this.username}/myblogs`}>My blogs</Nav.Link>
                             <Nav.Link onClick={this.logout} >Logout</Nav.Link>
                         </Nav>
+                        {
+                            this.path === '/' ? this.isIndex() : null
+                        }
                     </Container>
                 </Navbar>
 

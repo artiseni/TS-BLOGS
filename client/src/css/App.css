@@ -27,7 +27,6 @@
   position: fixed;
   z-index: 2;
   width: 100%;
-  display: contents;
 }
 
 .displayComments:hover {
@@ -37,4 +36,8 @@
 
 .cardComments {
   display: none;
+}
+
+.btnSearch {
+  margin: 0 10px;
 }

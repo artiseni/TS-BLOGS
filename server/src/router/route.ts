@@ -61,6 +61,17 @@ router
     })
 
 router
+    .route('/search')
+    .get(async (req: Request, res: Response) => {
+        try {
+            const post = new Infopost(req, res)
+            post.search()
+        } catch (error) {
+            console.log(`${error}`);
+        }
+    })
+
+router
     .route('/myblogs')
     .get(async (req: Request, res: Response) => {
         try {

@@ -1,5 +1,5 @@
-import { Component } from 'react'
-import { Navbar, Nav, Container } from 'react-bootstrap'
+import { Component, createRef } from 'react'
+import { Navbar, Nav, Container, Modal, Button } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { reset } from '../store/hooks'
@@ -21,16 +21,26 @@ interface Props {
     }
 }
 
+interface State {
+    show: boolean
+}
 
-class Navigation extends Component<Props | any> {
+
+class Navigation extends Component<Props | any, State> {
 
     path: string
     username: string
     uuid: string
     blogs: any
+    wrapper: any
 
     constructor(props: any) {
         super(props)
+        this.wrapper = createRef()
+        this.state = {
+            show: false
+        }
+
         const { pathname } = this.props.location
         const { username, uuid } = this.props.data.user
         const { blogs } = this.props.page
@@ -43,7 +53,12 @@ class Navigation extends Component<Props | any> {
     }
 
     logout = () => {
+        this.setState({ show: !this.state.show })
+    }
+
+    handleYes = () => {
         this.props.reset()
+        this.setState({ show: false })
         this.props.history.push('/')
     }
 
@@ -72,7 +87,8 @@ class Navigation extends Component<Props | any> {
                     </Container>
                 </Navbar>
             </div> :
-            <div className="navigation">
+            <div className="navigation" ref={this.wrapper} >
+
                 <Navbar bg="dark" variant="dark">
                     <Container>
                         <Navbar.Brand href="/">TS Blogs</Navbar.Brand>
@@ -83,6 +99,22 @@ class Navigation extends Component<Props | any> {
                         </Nav>
                     </Container>
                 </Navbar>
+
+                <Modal show={this.state.show} onHide={this.logout} animation={false} >
+                    <Modal.Header>
+                        <Modal.Title>TS Blogs</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Please click Yes to next...</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.logout}>
+                            Close
+                        </Button>
+                        <Button variant="dark" onClick={this.handleYes}>
+                            Yes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
             </div>
     }
 

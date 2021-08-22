@@ -5,8 +5,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store, persistore } from './store/store'
 import { PersistGate } from 'reduxjs-toolkit-persist/integration/react'
-import './css/index.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './css/index.css';
 
 
 ReactDOM.render(
@@ -19,7 +19,7 @@ ReactDOM.render(
           </PersistGate>
         </Provider>
       </Switch>
-    </Router>
+    </Router>,
   </React.StrictMode>,
   document.getElementById('root')
 )

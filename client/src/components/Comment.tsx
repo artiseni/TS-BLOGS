@@ -92,21 +92,21 @@ class Comment extends Component<Props | any, State> {
                 const api = new Api(data)
                 const result: any = await api.addComment()
 
-                if (result) {
+                const index_data = new Api(this.props.page.blogs)
+                const res: any = await index_data.index()
 
-                    const index_data = new Api(this.props.page.blogs)
-                    const res: any = await index_data.index()
+                if (result && res) {
 
-                    if (res) {
-                        new Promise(data => {
-                            data(this.props.setIndexPost(res))
-                        }).then(() => {
-                            const { parentNode } = e.target
-                            const textarea = parentNode.querySelector('textarea')
-                            textarea.value = ''
-                            this.setState({ isHide: 'block' })
-                        })
-                    }
+                    new Promise(data => {
+                        data(this.props.setIndexPost(res))
+                    }).then(() => {
+                        const { parentNode } = e.target
+                        const textarea = parentNode.querySelector('textarea')
+                        textarea.value = ''
+                        this.setState({ comments: '' })
+                        this.setState({ isHide: 'block' })
+                    })
+
                 }
 
             } catch (error) {

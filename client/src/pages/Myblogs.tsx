@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Container, Row, Col, Card, Alert, Button } from 'react-bootstrap'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import Navigation from '../components/Navigation'
 import {
     setMyPost, setLoading, setEdit,
@@ -49,7 +49,7 @@ class Myblogs extends Component<Props | any> {
         const data = { uuid, currentPage, take }
 
         try {
-            console.log(data)
+            // console.log(data)
             const api = new Api(data)
             const result: any = await api.myBlogs()
 
@@ -63,6 +63,19 @@ class Myblogs extends Component<Props | any> {
         } catch (error) {
             const { data } = error.response
             alert(data.message)
+        }
+    }
+
+
+    btnDelete = async (uuid: string) => {
+        try {
+            const api = new Api({ uuid })
+            const result: any = await api.deletePost()
+            if (result) {
+                this.updatePage()
+            }
+        } catch (error) {
+            console.log(`${error}`)
         }
     }
 
@@ -86,7 +99,8 @@ class Myblogs extends Component<Props | any> {
                             <Card.Text className="content">
                                 {hidden.textBody(result.content)}
                             </Card.Text>
-                            <Button variant="dark" onClick={() => this.btnEdit(result)} >Edit</Button>
+                            <Button variant="dark" onClick={() => this.btnEdit(result)} >Edit</Button>{' '}
+                            <Button variant="dark" onClick={() => this.btnDelete(result.uuid)} >Delete</Button>
                         </Card.Body>
                         <HiddenButton text={result.content} />
                     </Card>
@@ -109,13 +123,12 @@ class Myblogs extends Component<Props | any> {
 
     render = () => {
 
-        // console.log(this.props.data.myPost)
 
         const hidden = new HiddenButton({})
-        const { loading } = this.props.page
-        const { myPost } = this.props.data
+        const { loading, edit } = this.props.page
+        const { myPost, user } = this.props.data
 
-        return (
+        return myPost[0].length !== 0 ? (
             <>
                 <Navigation />
                 <div className="App">
@@ -123,7 +136,7 @@ class Myblogs extends Component<Props | any> {
                         <Row>
                             <Col md>
                                 {loading ?
-                                    this.isEdit(this.props.page.edit, myPost, hidden)
+                                    this.isEdit(edit, myPost, hidden)
                                     : <Alert variant="success">Processing data... </Alert>
                                 }
                             </Col>
@@ -132,7 +145,24 @@ class Myblogs extends Component<Props | any> {
                     <Paginate type="myblogs" />
                 </div>
             </>
-        )
+        ) :
+            <>
+                <Navigation />
+                <div className="App">
+                    <Container>
+                        <Card.Body>
+                            <br />
+                            <Card.Title>
+                                {user.username}, You have no blogs yet...
+                            </Card.Title>
+                            <p>
+                                Back to <Link className="link" to={`/${user.username}`} >Home</Link>, write interesting blogs and come back here...
+                            </p>
+                            <hr />
+                        </Card.Body>
+                    </Container>
+                </div>
+            </>
     }
 
 }

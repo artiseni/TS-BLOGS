@@ -83,8 +83,9 @@ export default class Api {
         }
     }
 
-    deletePost = async (uuid: any): Promise<void> => {
-        const res: any = await this.api.put('/delete', uuid)
+    deletePost = async (): Promise<void> => {
+
+        const res: any = await this.api.put('/delete', this.req)
         if (res) {
             const { data } = res
             return data

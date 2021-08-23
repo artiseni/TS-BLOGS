@@ -127,8 +127,8 @@ class Comment extends Component<Props | any, State> {
 
         return (
             <>
-                <Card.Text className="displayComments" onClick={this.displayComments}>{this.props.infocomments.length} comments</Card.Text>
                 <hr />
+                <Card.Text className="displayComments" onClick={this.displayComments}>{this.props.infocomments.length} comments</Card.Text>
                 {
                     this.state.dataHide.length !== 0 ?
                         <Card className="cardComments" style={{ display: this.state.isHide }}>

@@ -80,9 +80,9 @@ class Home extends Component<Props, State> {
                                         </Card.Title>
                                         <hr />
                                         <Card.Text>
-                                            This is your blogs!
+                                            This is your blogs
                                             <br />
-                                            Please write interesting blogs!
+                                            Please write interesting blogs below!
                                         </Card.Text>
                                     </Card.Body>
                                     <br />

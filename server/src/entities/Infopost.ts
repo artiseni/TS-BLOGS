@@ -42,8 +42,11 @@ export class Infopost extends Model {
         console.log(this.req.query)
         try {
             const data = await Infopost.findAndCount({
-                title: ILike(`%${title}%`),
-                // relations: ['infouser', 'infocomments']
+                where: { title: ILike(`%${title}%`) },
+                order: {
+                    updatedAt: 'DESC',
+                },
+                relations: ['infouser', 'infocomments']
             })
             if (data) {
                 this.res.status(200).json(data)
@@ -58,7 +61,9 @@ export class Infopost extends Model {
         const { currentPage, take } = this.req.query
         try {
             const data = await Infopost.findAndCount({
-                order: { updatedAt: 'DESC' },
+                order: {
+                    updatedAt: 'DESC'
+                },
                 skip: (currentPage * take) - take,
                 take,
                 relations: ['infouser', 'infocomments']
@@ -73,7 +78,7 @@ export class Infopost extends Model {
 
     myPost = async () => {
         try {
-            console.log(this.req.query)
+
             const { uuid, currentPage, take } = this.req.query
             const data = await Infouser.findOne({ uuid })
 
@@ -133,9 +138,12 @@ export class Infopost extends Model {
 
     deletePost = async () => {
         try {
+
             const { uuid } = this.req.body
             const post = await Infopost.findOne({ uuid })
+
             if (post) {
+
                 const data = await Infopost.remove(post)
                 return this.res.status(200).json(data)
             }

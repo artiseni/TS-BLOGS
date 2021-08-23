@@ -2,7 +2,7 @@ import { Component, createRef } from 'react'
 import { Navbar, Nav, Container, Modal, Button, FormControl, Form } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { reset } from '../store/hooks'
+import { reset, setIndexPost, setCountBlogs } from '../store/hooks'
 import Api from '../api/Api'
 
 
@@ -20,6 +20,9 @@ interface Props {
         blogs: any
         current: number
     }
+
+    setIndexPost: any
+    setCountBlogs: any
 }
 
 interface State {
@@ -85,7 +88,8 @@ class Navigation extends Component<Props | any, State> {
             const api = new Api({ title })
             const result: any = await api.search()
             if (result) {
-                console.log(result)
+                this.props.setCountBlogs(result[1])
+                this.props.setIndexPost(result)
             }
         } catch (error) {
             console.log(`${error}`)
@@ -177,7 +181,9 @@ const mapStateToProps = (state: any) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-    reset: () => dispatch(reset())
+    reset: () => dispatch(reset()),
+    setIndexPost: (data: any) => dispatch(setIndexPost(data)),
+    setCountBlogs: (data: any) => dispatch(setCountBlogs(data))
 })
 
 

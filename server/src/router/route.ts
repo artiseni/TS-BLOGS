@@ -87,7 +87,7 @@ router
     .put(async (req: Request, res: Response) => {
         try {
             const post = new Infopost(req, res)
-            post.deletePost()
+            await post.deletePost()
         } catch (error) {
             console.log(`${error}`)
         }

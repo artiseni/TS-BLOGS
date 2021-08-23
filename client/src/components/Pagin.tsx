@@ -170,7 +170,12 @@ class Paginate extends Component<Props> {
 
     render = () => {
 
-        return (
+        const { countBlogs } = this.props.page
+        const { take } = this.props.page.blogs
+
+        console.log(countBlogs)
+
+        return countBlogs > take ?
             <div className="pagination">
                 <Pagination size="sm">
                     <Pagination.First onClick={this.firstButton} disabled={this.props.page.blogs.currentPage === 1} />
@@ -182,7 +187,7 @@ class Paginate extends Component<Props> {
                     <Pagination.Last onClick={this.lastButton} disabled={this.props.page.blogs.currentPage === this.props.page.ceil} />
                 </Pagination>
             </div>
-        )
+            : null
     }
 }
 

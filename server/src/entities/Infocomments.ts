@@ -29,7 +29,7 @@ export class Infocomments extends Model {
     @Column()
     infopostId?: number
 
-    @ManyToOne(() => Infopost, infopost => infopost.infocomments)
+    @ManyToOne(() => Infopost, infopost => infopost.infocomments, { onDelete: 'CASCADE' })
     infopost!: Infopost[]
 
     addComment = async () => {
